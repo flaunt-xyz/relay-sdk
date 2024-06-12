@@ -14,7 +14,8 @@ import { getPayloadToSign, mapRequestToStruct } from "../utils";
 
 export const getSignatureDataERC2771 = async (
   request: SponsoredCallERC2771Request,
-  provider: ethers.providers.Web3Provider
+  provider: ethers.providers.Web3Provider,
+  wallet?: ethers.Wallet
 ): Promise<SignatureData> => {
   try {
     const isSupported = await isNetworkSupported(Number(request.chainId));
@@ -30,7 +31,8 @@ export const getSignatureDataERC2771 = async (
     const signature = await signTypedDataV4(
       provider,
       request.user as string,
-      getPayloadToSign(struct)
+      getPayloadToSign(struct, wallet),
+      wallet
     );
     return {
       struct,
